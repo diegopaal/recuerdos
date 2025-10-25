@@ -1,0 +1,92 @@
+{% macro chip(text) -%}
+  <span class="chip">{{ text }}</span>
+{%- endmacro %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Carta • {{ hero.title }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="bg">
+    <div class="gradient-layer"></div>
+    <canvas id="particles"></canvas>
+    <div class="noise"></div>
+  </div>
+
+  <aside class="toc" id="toc"></aside>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="badge">{{ hero.badge }}</div>
+      <h1 class="display">{{ hero.title }}</h1>
+      <p class="tagline">{{ hero.tagline }}</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary" id="startBtn">{{ hero.cta_primary }}</button>
+        <button class="btn btn-ghost" id="giftMode">{{ hero.cta_secondary }}</button>
+      </div>
+      <div class="stamp"><span>Con cariño</span></div>
+    </div>
+    <svg class="curve" viewBox="0 0 1200 120" preserveAspectRatio="none">
+      <path d="M0,0 C300,120 900,-40 1200,80 L1200,0 L0,0 Z"></path>
+    </svg>
+  </header>
+
+  <main id="main">
+    {% for s in sections %}
+    <section class="section" data-title="{{ s.title }}">
+      <div class="card {% if loop.index % 3 == 0 %}gradient{% elif loop.index % 2 == 0 %}soft{% else %}glass{% endif %}">
+        <div class="ornament"></div>
+        <div class="layout {% if loop.index0 % 2 == 0 %}split{% else %}stack{% endif %}">
+          <div class="copy">
+            <h2 class="title">{{ s.title }}</h2>
+            <p class="lead">{{ s.lead }}</p>
+            {% if s.quote %}
+            <div class="quote">
+              <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h4v10H5V9a2 2 0 0 1 2-2zm10 0h4v10h-6V9a2 2 0 0 1 2-2z" fill="currentColor"/></svg>
+              <p>{{ s.quote }}</p>
+            </div>
+            {% endif %}
+            {% if s.chips %}
+            <div class="tags">
+              {% for c in s.chips %}{{ chip(c) }}{% endfor %}
+            </div>
+            {% endif %}
+          </div>
+          <figure class="figure">
+            <div class="frame">
+              {% if s.image %}
+                <img src="{{ url_for('static', filename=s.image) }}" alt="{{ s.title|e }}">
+              {% else %}
+                <div class="ph"></div>
+              {% endif %}
+            </div>
+            {% if s.caption %}<figcaption>{{ s.caption }}</figcaption>{% endif %}
+          </figure>
+        </div>
+      </div>
+    </section>
+    {% endfor %}
+
+    <section class="section" data-title="Cierre">
+      <div class="card center">
+        <div class="ornament"></div>
+        <h2 class="title">Te quiero</h2>
+        <p class="lead">Gracias por darme el enorme privilegio de ser parte de tu vida. </p>
+        <div class="actions center">
+          <button class="btn btn-primary" id="downloadBtn">Descargar carta</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><p>Hecho con mucho amor y cariño</p></footer>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
